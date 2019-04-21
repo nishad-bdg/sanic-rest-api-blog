@@ -3,17 +3,33 @@ from sanic.response import html
 from sanic.views import HTTPMethodView
 from sanic.response import text
 from sanic import response
+from sanic_jwt import exceptions,initialize
+from sanic_jwt.decorators import protected
 import json
 from db import *
 import hashlib, binascii
 import os
 
+async def authenticate(request, *args, **kwargs):
+    username = request.json.get("username",None)
+    password = request.json.get("password",None)
+    hash_password = hashlib.sha256(str(password).encode('utf-8')).hexdigest()
+    
+    if not username or not password:
+        raise exceptions.AuthenticationFailed("Missing username or password")
+    try:
+        user = User.get(username = username, password = hash_password)
+    except:
+        raise exceptions.AuthenticationFailed("Invalid username or password")
+    return {"user_id": user.id}
+
 
 app = Sanic(__name__)
 app.static('/public','./public')
+initialize(app, authenticate = authenticate)
 
 class UserList(HTTPMethodView):
-
+    decorators = [protected()]
     async def get(self, request):
         users = []
         for user in User.select():
@@ -44,6 +60,10 @@ class UserList(HTTPMethodView):
         return response.json({'message': message})
 
 
+
+
+ 
+
 class TweetList(HTTPMethodView):
 
     async def get(self,request):
@@ -60,6 +80,7 @@ class TweetList(HTTPMethodView):
 
 
 app.add_route(UserList.as_view(), '/')
+
 app.add_route(TweetList.as_view(), '/tweet')
 
 app.run(host = "0.0.0.0", port = 8000, debug = True)

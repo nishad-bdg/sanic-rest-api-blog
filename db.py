@@ -1,7 +1,7 @@
 import datetime
 from peewee import *
 
-db = MySQLDatabase('tweets', user='root',password = '', charset='utf8mb4')
+db = SqliteDatabase('mydb.db')
 
 class BaseModel(Model):
     class Meta:
@@ -23,6 +23,8 @@ class Tweet(BaseModel):
 
 def create_table():
     db.create_tables([User,Tweet])
+
+
 
 
 
