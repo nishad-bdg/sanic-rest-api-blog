@@ -17,7 +17,7 @@ class UserList(HTTPMethodView):
     async def get(self, request):
         users = []
         for user in User.select():
-            users.append(user)
+            users.append({"username": user.username, "password": user.password, "join_date": user.join_date})
         return response.json(users)
     
     async def post(self, request):
@@ -49,7 +49,7 @@ class TweetList(HTTPMethodView):
     async def get(self,request):
         tweets = []
         for tweet in Tweet.select():
-            tweets.append(tweet)
+            tweets.append({ "message": tweet.message, "created": tweet.created, "is_published": tweet.is_published})
         return response.json(tweets)
 
     async def post(self,request):

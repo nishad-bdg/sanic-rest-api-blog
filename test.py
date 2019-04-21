@@ -1,16 +1,12 @@
 from sanic import Sanic
-from sanic.log import logger 
-from sanic.response import text
+from sanic.response import json
+from sanic import Blueprint
 
 app = Sanic('test')
-
 @app.route('/')
-async def test(request):
-    response = text("There's a cookie up in this response")
-    response.cookies['test'] = 'It worked!'
-    response.cookies['test']['domain'] = '.gotta-go-fast.com'
-    response.cookies['test']['httponly'] = True
-    return response
+async def home(request):
+    return json({'hello':'World'})
+
 
 if __name__ == "__main__":
     app.run(debug = True)
