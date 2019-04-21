@@ -1,7 +1,7 @@
 import datetime
 from peewee import *
 
-db = MySQLDatabase('tweets', user='root',password = 'nishad90zx', charset='utf8mb4')
+db = MySQLDatabase('tweets', user='root',password = '', charset='utf8mb4')
 
 class BaseModel(Model):
     class Meta:
