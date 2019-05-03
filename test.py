@@ -3,6 +3,7 @@ from sanic.response import json
 from sanic import Blueprint
 
 app = Sanic('test')
+
 @app.route('/')
 async def home(request):
     return json({'hello':'World'})
